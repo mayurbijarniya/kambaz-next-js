@@ -27,6 +27,11 @@ export default function TOC() {
                     Kambaz
                 </Link>
             </li>
+            <li>
+                <Link href="https://github.com/mayurbijarniya/kambaz-next-js/tree/assignment-one" id="wd-github-link">
+                    GitHub
+                </Link>
+            </li>
         </ul>
     );
 }

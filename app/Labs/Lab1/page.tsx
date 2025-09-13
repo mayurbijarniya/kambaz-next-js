@@ -3,6 +3,7 @@ export default function Lab1() {
   return (
     <div id="wd-lab1">
       <h2>Lab 1</h2>
+      <h3>Mayur Mahavir Bijarniya Section 05</h3>
       <h3>HTML Examples</h3>
       <div id="wd-h-tag">
         <h4>Heading Tags</h4>
@@ -169,6 +170,9 @@ anim id est laborum.
             id="wd-all-good">
             Hello World!
             </button>
+            <br />
+            <br/>
+            <input type="file" id="wd-file-upload" />
             <h5 id="wd-radio-buttons">Radio buttons</h5>
             <label>Favorite movie genre:</label>
             <br />
