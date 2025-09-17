@@ -23,8 +23,13 @@ export default function TOC() {
                 </Link>
             </li>
             <li>
-                <Link href="/" id="wd-kambaz-link">
+                <Link href="/Account/Signin" id="wd-kambaz-link">
                     Kambaz
+                </Link>
+            </li>
+            <li>
+                <Link href="https://github.com/mayurbijarniya/kambaz-next-js/tree/assignment-one" id="wd-github-link">
+                    GitHub
                 </Link>
             </li>
         </ul>
