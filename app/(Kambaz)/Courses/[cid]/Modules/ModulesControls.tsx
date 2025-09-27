@@ -33,11 +33,11 @@ export default function ModulesControls() {
              labels Unpublish all modules and items and Unpublish modules only */}
        </DropdownMenu>
      </Dropdown>
-    <Button variant="secondary" size="lg" className="me-1 float-end" id="wd-collapse-all">
-      Collapse All
-    </Button>
     <Button variant="secondary" size="lg" className="me-1 float-end" id="wd-view-progress">
       View Progress
+    </Button>
+    <Button variant="secondary" size="lg" className="me-1 float-end" id="wd-collapse-all">
+      Collapse All
     </Button>
      {/* Implement the View Progress and Collapse All buttons with IDs wd-view-progress and wd-collapse-all */}
    </div>
