@@ -14,11 +14,9 @@ export default function Assignments() {
     const cid = params.cid;
     return (
         <div id="wd-assignments">
-            <ModulesControls />
-            <br />
-            <br />
-            <br />
-            <br />
+            <div className="clearfix mb-4">
+                <ModulesControls />
+            </div>
             <ListGroup className="rounded-0" id="wd-assignments">
                 <ListGroupItem className="wd-assignments-title p-0 mb-5 fs-5 border-gray">
                     <div className="wd-title p-3 ps-2 bg-secondary d-flex align-items-center justify-content-between">

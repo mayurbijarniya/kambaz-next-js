@@ -16,7 +16,7 @@ export default function ModulesControls() {
         <input
             type="text"
             className="form-control"
-            placeholder="Search..."
+            placeholder="Search for Assignment"
             id="wd-search-assignment"
             style={{ height: "48px" , borderLeft: "none"}}
         />
