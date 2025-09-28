@@ -51,9 +51,7 @@ export default function Assignments() {
                                     </div>
                                 </span>
                             </Link>
-                            <div className="d-flex align-items-center">
-                                <ModuleControlButtons />
-                            </div>
+                            <ModuleControlButtons />
                         </ListGroupItem>
                         {/* A2 */}
                         <ListGroupItem className="wd-assignment-list-item p-3 ps-1 d-flex justify-content-between">
@@ -72,9 +70,7 @@ export default function Assignments() {
                                     </div>
                                 </span>
                             </Link>
-                            <div className="d-flex align-items-center">
-                                <ModuleControlButtons />
-                            </div>
+                            <ModuleControlButtons />
                         </ListGroupItem>
                         {/* A3 */}
                         <ListGroupItem className="wd-assignment-list-item p-3 ps-1 d-flex justify-content-between">
@@ -93,9 +89,7 @@ export default function Assignments() {
                                     </div>
                                 </span>
                             </Link>
-                            <div className="d-flex align-items-center">
-                                <ModuleControlButtons />
-                            </div>
+                            <ModuleControlButtons />
                         </ListGroupItem>
                     </ListGroup>
                 </ListGroupItem>
