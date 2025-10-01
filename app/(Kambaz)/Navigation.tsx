@@ -77,7 +77,7 @@ export default function KambazNavigation() {
     </ListGroupItem>
     <ListGroupItem className="border-0 bg-black text-center">
         <Link
-            href="/Labs"
+            href="/Labs/Lab1"
             id="wd-labs-link"
             className="text-white text-decoration-none"
         >

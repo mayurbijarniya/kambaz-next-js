@@ -1,4 +1,4 @@
 import { redirect } from "next/navigation";
 export default function Kambaz() {
-    redirect("/Labs/Lab1");
+    redirect("/Account/Signin");
 }
