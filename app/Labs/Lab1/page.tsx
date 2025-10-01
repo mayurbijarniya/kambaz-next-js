@@ -244,7 +244,7 @@ anim id est laborum.
       Please
       <a href="https://www.lipsum.com" id="wd-lipsum">click here</a>
       to get dummy text<br/>
-      <a href="https://github.com/mayurbijarniya/kambaz-next-js/tree/assignment-one" id="wd-github">
+      <a target="_blank" href="https://github.com/mayurbijarniya/kambaz-next-js" id="wd-github">
       My GitHub Repository
       </a>
     </div>
