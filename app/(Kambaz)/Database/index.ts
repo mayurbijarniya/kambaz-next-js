@@ -1,5 +1,4 @@
-import coursesData from "./courses.json";
-import modulesData from "./modules.json";
-export const courses = coursesData;
-export const modules = modulesData;
-export default { courses, modules };
+import courses from "./courses.json";
+import modules from "./modules.json";
+import assignments from "./assignments.json";
+export { courses, modules, assignments };
