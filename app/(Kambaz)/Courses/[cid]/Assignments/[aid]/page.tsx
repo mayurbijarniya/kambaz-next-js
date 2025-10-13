@@ -1,34 +1,76 @@
 "use client";
 
-import { Container, Row, Col, Form, Button } from "react-bootstrap";
+import Link from "next/link";
+import { useParams } from "next/navigation";
+import { Container, Row, Col, Form } from "react-bootstrap";
+import * as db from "../../../../Database";
+
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+const formatDateTime = (value?: string | null) => {
+  if (!value) {
+    return "TBD";
+  }
+  const [datePart, timePart] = value.split("T");
+  if (!datePart || !timePart) {
+    return value;
+  }
+  const [year, month, day] = datePart.split("-").map(Number);
+  const [hourRaw, minuteRaw] = timePart.split(":").map(Number);
+  if ([year, month, day, hourRaw, minuteRaw].some((num) => Number.isNaN(num))) {
+    return value;
+  }
+
+  const period = hourRaw >= 12 ? "pm" : "am";
+  const hour12 = ((hourRaw + 11) % 12) + 1;
+  const monthLabel = MONTHS[month - 1] ?? month.toString();
+  const minuteLabel = minuteRaw.toString().padStart(2, "0");
+
+  return `${monthLabel} ${day} at ${hour12}:${minuteLabel}${period}`;
+};
 
 export default function AssignmentEditor() {
+  const { cid, aid } = useParams<{ cid: string; aid: string }>();
+  const assignment = db.assignments.find(
+    (item) => item.course === cid && item._id === aid
+  );
+
+  if (!assignment) {
+    return (
+      <Container fluid id="wd-assignments-editor" className="py-4">
+        <p className="fs-4">Assignment not found.</p>
+        <Link href={`/Courses/${cid}/Assignments`} className="btn btn-secondary">
+          Back to Assignments
+        </Link>
+      </Container>
+    );
+  }
+
   return (
     <Container fluid id="wd-assignments-editor" className="py-2">
       <Form>
         {/* Assignment name */}
         <Row className="g-3 mb-4">
-          <Col sm={12} md={8} lg={6}>
+          <Col sm={12} md={8} lg={7}>
             <Form.Group controlId="wd-name">
               <Form.Label className="fw-semibold">Assignment Name</Form.Label>
-              <Form.Control defaultValue="A1" />
+              <Form.Control defaultValue={assignment.title} />
             </Form.Group>
           </Col>
         </Row>
 
         {/* Description */}
         <Row className="g-3 mb-4">
-          <Col sm={12} md={8} lg={6}>
+          <Col sm={12} md={8} lg={7}>
             <div className="border rounded p-3">
               <p className="mb-2">
-                The assignment is{" "}
-                <span className="text-danger">
-                  available online
-                </span>
+                The assignment <span className="fw-semibold">{assignment.title}</span> is <span className="text-danger">available online</span>.
               </p>
               <p className="mb-2">
-                Submit a link to the landing page of your Web application running on Vercel.
+                Available <strong>{formatDateTime(assignment.availableOn)}</strong> &nbsp;|&nbsp; Due{" "}
+                <strong>{formatDateTime(assignment.dueOn)}</strong>
               </p>
+              <p className="mb-2">Make sure to review the course syllabus and submit the required materials before the deadline.</p>
               <p className="mb-2">The landing page should include the following:</p>
               <ul className="mb-2">
                 <li>Your full name and section</li>
@@ -50,8 +92,8 @@ export default function AssignmentEditor() {
           <Col sm={3} md={2} className="text-sm-end">
             <Form.Label htmlFor="wd-points">Points</Form.Label>
           </Col>
-          <Col sm={9} md={6} lg={4}>
-            <Form.Control id="wd-points" type="number" defaultValue={100} />
+          <Col sm={9} md={6} lg={5}>
+            <Form.Control id="wd-points" type="number" defaultValue={assignment.points ?? 0} />
           </Col>
         </Row>
 
@@ -60,7 +102,7 @@ export default function AssignmentEditor() {
           <Col sm={3} md={2} className="text-sm-end">
             <Form.Label htmlFor="wd-group">Assignment Group</Form.Label>
           </Col>
-          <Col sm={9} md={6} lg={4}>
+          <Col sm={9} md={6} lg={5}>
             <Form.Select id="wd-group" defaultValue="ASSIGNMENTS">
               <option>ASSIGNMENTS</option>
             </Form.Select>
@@ -72,7 +114,7 @@ export default function AssignmentEditor() {
           <Col sm={3} md={2} className="text-sm-end">
             <Form.Label htmlFor="wd-display-grade-as">Display Grade as</Form.Label>
           </Col>
-          <Col sm={9} md={6} lg={4}>
+          <Col sm={9} md={6} lg={5}>
             <Form.Select id="wd-display-grade-as" defaultValue="Percentage">
               <option>Percentage</option>
             </Form.Select>
@@ -84,7 +126,7 @@ export default function AssignmentEditor() {
           <Col sm={3} md={2} className="text-sm-end">
             <Form.Label htmlFor="wd-submission-type">Submission Type</Form.Label>
           </Col>
-          <Col sm={9} md={6} lg={4}>
+          <Col sm={9} md={6} lg={5}>
             <div className="border rounded p-3">
               <Form.Select
                 id="wd-submission-type"
@@ -127,7 +169,7 @@ export default function AssignmentEditor() {
           <Col sm={3} md={2} className="text-sm-end">
             <Form.Label className="pt-2">Assign</Form.Label>
           </Col>
-          <Col sm={9} md={6} lg={4}>
+          <Col sm={9} md={6} lg={5}>
             <div className="border rounded p-3">
               <Form.Group className="mb-3">
                 <Form.Label htmlFor="wd-assign-to" className="fw-semibold">
@@ -140,19 +182,27 @@ export default function AssignmentEditor() {
                 <Col xs={12}>
                   <Form.Group controlId="wd-due-date">
                     <Form.Label className="fw-semibold">Due</Form.Label>
-                    <Form.Control type="date" defaultValue="2024-05-13" />
+                    <Form.Control
+                      type="datetime-local"
+                      step="60"
+                      defaultValue={assignment.dueOn?.slice(0, 16) ?? ""}
+                    />
                   </Form.Group>
                 </Col>
                 <Col xs={6}>
                   <Form.Group controlId="wd-available-from">
                     <Form.Label className="fw-semibold">Available from</Form.Label>
-                    <Form.Control type="date" defaultValue="2024-05-06" />
+                    <Form.Control
+                      type="datetime-local"
+                      step="60"
+                      defaultValue={assignment.availableOn?.slice(0, 16) ?? ""}
+                    />
                   </Form.Group>
                 </Col>
                 <Col xs={6}>
                   <Form.Group controlId="wd-available-until">
                     <Form.Label className="fw-semibold">Until</Form.Label>
-                    <Form.Control type="date" defaultValue="2024-05-20" />
+                    <Form.Control type="datetime-local" defaultValue="2025-05-20T23:59" />
                   </Form.Group>
                 </Col>
               </Row>
@@ -161,7 +211,7 @@ export default function AssignmentEditor() {
         </Row>
 
         <Row>
-          <Col sm={12} md={8} lg={6}>
+          <Col sm={12} md={8} lg={7}>
           <hr className="my-4" />
           </Col>
         </Row>
@@ -172,11 +222,21 @@ export default function AssignmentEditor() {
           <Col
             sm={9}
             md={6}
-            lg={4}
+            lg={5}
             className="d-flex justify-content-end gap-2"
           >
-            <Button variant="light">Cancel</Button>
-            <Button variant="danger">Save</Button>
+            <Link
+              href={`/Courses/${cid}/Assignments`}
+              className="btn btn-light"
+            >
+              Cancel
+            </Link>
+            <Link
+              href={`/Courses/${cid}/Assignments`}
+              className="btn btn-danger"
+            >
+              Save
+            </Link>
           </Col>
         </Row>
       </Form>
