@@ -39,7 +39,7 @@ export default function Assignments() {
             >
               {assignments
                 .filter((assignment) => assignment.course === cid)
-                .map((assignment, index: number) => (
+                .map((assignment) => (
                   <ListGroupItem
                     key={assignment._id}
                     className="wd-assignment-list-item list-group-item-action p-3 ps-1 d-flex justify-content-between align-items-center"
@@ -58,9 +58,8 @@ export default function Assignments() {
                         </span>
                         <div className="wd-assignment-details text-body-secondary">
                           <span className="text-danger">{assignment.title}</span>{" "}
-                          | <strong>Not available until</strong> May {20 + index}{" "}
-                          at 12:00am | <strong>Due</strong> May {27 + index} at
-                          11:59pm | 100 pts
+                          | <strong>Not available until</strong> {assignment.availableOn ?? "TBD"} |{" "}
+                          <strong>Due</strong> {assignment.dueOn ?? "TBD"} | {assignment.points ?? 0} pts
                         </div>
                       </span>
                     </Link>
