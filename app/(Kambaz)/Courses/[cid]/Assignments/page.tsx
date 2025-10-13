@@ -77,7 +77,7 @@ export default function Assignments() {
                       className="d-flex text-decoration-none flex-grow-1 me-3"
                     >
                       <span>
-                        <span className="wd-assignment-link fw-semibold text-decoration-none fs-5">
+                        <span className="wd-assignment-link fw-semibold text-decoration-none text-body-secondary fs-5">
                           {assignment._id}
                         </span>
                         <div className="wd-assignment-details text-body-secondary">
