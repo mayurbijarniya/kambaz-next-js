@@ -13,7 +13,7 @@ export default function KambazNavigation() {
         { path: "/Dashboard", icon: LiaBookSolid, label: "Courses" },
         { path: "/Calendar", icon: IoCalendarOutline, label: "Calendar" },
         { path: "/Inbox", icon: FaInbox, label: "Inbox" },
-        { path: "/Labs", icon: LiaCogSolid, label: "Labs" },
+        { path: "/Labs/Lab1", icon: LiaCogSolid, label: "Labs" },
     ];  
     return (
 <ListGroup
