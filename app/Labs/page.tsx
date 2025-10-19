@@ -7,6 +7,7 @@ export default function Labs() {
         <li><Link href="/Labs/Lab1" id="wd-lab1-link">Lab 1: HTML Examples</Link></li>
         <li><Link href="/Labs/Lab2" id="wd-lab2-link">Lab 2: Intro to CSS</Link></li>
         <li><Link href="/Labs/Lab3" id="wd-lab3-link">Lab 3: Intro to TypeScript</Link></li>
+        <li><Link href="/Labs/Lab4" id="wd-lab4-link">Lab 4: Maintaining State in React Applications</Link></li>
         <li><Link href="/Account/Signin" id="wd-kambaz-link">Kambaz</Link></li>
       </ul>
     </div>
