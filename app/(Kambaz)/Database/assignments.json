@@ -5,6 +5,7 @@
         "course": "RS101",
         "availableOn": "2025-05-06T00:00",
         "dueOn": "2025-05-13T23:59",
+        "availableUntil": "2025-05-20T23:59",
         "points": 100
     },
     {
@@ -13,6 +14,7 @@
         "course": "RS101",
         "availableOn": "2025-05-13T00:00",
         "dueOn": "2025-05-20T23:59",
+        "availableUntil": "2025-05-27T23:59",
         "points": 100
     },
     {
@@ -21,6 +23,7 @@
         "course": "RS101",
         "availableOn": "2025-05-20T00:00",
         "dueOn": "2025-05-27T23:59",
+        "availableUntil": "2025-06-03T23:59",
         "points": 100
     },
     {
@@ -29,6 +32,7 @@
         "course": "RS102",
         "availableOn": "2025-05-06T00:00",
         "dueOn": "2025-05-13T23:59",
+        "availableUntil": "2025-05-20T23:59",
         "points": 50
     },
     {
@@ -37,6 +41,7 @@
         "course": "RS102",
         "availableOn": "2025-05-13T00:00",
         "dueOn": "2025-05-20T23:59",
+        "availableUntil": "2025-05-27T23:59",
         "points": 100
     },
     {
@@ -45,6 +50,7 @@
         "course": "RS102",
         "availableOn": "2025-05-20T00:00",
         "dueOn": "2025-05-27T23:59",
+        "availableUntil": "2025-06-03T23:59",
         "points": 100
     },
     {
@@ -53,6 +59,7 @@
         "course": "RS103",
         "availableOn": "2025-05-20T00:00",
         "dueOn": "2025-05-27T23:59",
+        "availableUntil": "2025-06-03T23:59",
         "points": 100
     },
     {
@@ -61,6 +68,7 @@
         "course": "RS103",
         "availableOn": "2025-05-21T00:00",
         "dueOn": "2025-05-28T23:59",
+        "availableUntil": "2025-06-04T23:59",
         "points": 100
     },
     {
@@ -69,6 +77,7 @@
         "course": "RS103",
         "availableOn": "2025-05-22T00:00",
         "dueOn": "2025-05-29T23:59",
+        "availableUntil": "2025-06-05T23:59",
         "points": 100
     }
 ]

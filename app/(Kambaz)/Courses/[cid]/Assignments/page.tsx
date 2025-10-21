@@ -3,13 +3,13 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import ListGroup from "react-bootstrap/esm/ListGroup";
 import ListGroupItem from "react-bootstrap/esm/ListGroupItem";
-import * as db from "../../../Database";
 import ModuleControlButtons from "./ModuleControlButtons";
 import ModulesControls from "./ModulesControls";
 import AssignmentControlButtons from "./AssignmentControlButtons";
 import { BsGripVertical } from "react-icons/bs";
 import { BsFillCaretDownFill } from "react-icons/bs";
 import { BsPencilSquare } from "react-icons/bs";
+import { useSelector } from "react-redux";
 
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
@@ -37,7 +37,9 @@ const formatDateTime = (value?: string | null) => {
 
 export default function Assignments() {
     const { cid } = useParams<{ cid: string }>();
-    const assignments = db.assignments;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { assignments } = useSelector((state: any) => state.assignmentsReducer);
+    
     return (
       <div id="wd-assignments">
         <div className="clearfix mb-4">
@@ -62,8 +64,10 @@ export default function Assignments() {
               id="wd-assignment-list"
             >
               {assignments
-                .filter((assignment) => assignment.course === cid)
-                .map((assignment) => (
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                .filter((assignment: any) => assignment.course === cid)
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                .map((assignment: any) => (
                   <ListGroupItem
                     key={assignment._id}
                     className="wd-assignment-list-item list-group-item-action p-3 ps-1 d-flex justify-content-between align-items-center"
