@@ -9,8 +9,8 @@ import { FormControl, Button } from "react-bootstrap";
 
 export default function Signin() {
   const [credentials, setCredentials] = useState<any>({
-    username: "",
-    password: "",
+    username: "dark_knight",
+    password: "wayne123",
   });  
   const dispatch = useDispatch();
   const router = useRouter();
