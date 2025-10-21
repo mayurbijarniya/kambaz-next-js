@@ -9,7 +9,10 @@ import AssignmentControlButtons from "./AssignmentControlButtons";
 import { BsGripVertical } from "react-icons/bs";
 import { BsFillCaretDownFill } from "react-icons/bs";
 import { BsPencilSquare } from "react-icons/bs";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { useState } from "react";
+import { Modal, Button } from "react-bootstrap";
+import { deleteAssignment, type Assignment } from "./reducer";
 
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
@@ -37,8 +40,29 @@ const formatDateTime = (value?: string | null) => {
 
 export default function Assignments() {
     const { cid } = useParams<{ cid: string }>();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { assignments } = useSelector((state: any) => state.assignmentsReducer);
+    const dispatch = useDispatch();
+    const { assignments } = useSelector((state: { assignmentsReducer: { assignments: Assignment[] } }) => state.assignmentsReducer);
+    
+    const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+    const [assignmentToDelete, setAssignmentToDelete] = useState<{ _id: string; title: string } | null>(null);
+
+    const handleDeleteClick = (assignmentId: string, assignmentTitle: string) => {
+      setAssignmentToDelete({ _id: assignmentId, title: assignmentTitle });
+      setShowDeleteDialog(true);
+    };
+
+    const handleConfirmDelete = () => {
+      if (assignmentToDelete) {
+        dispatch(deleteAssignment(assignmentToDelete._id));
+        setShowDeleteDialog(false);
+        setAssignmentToDelete(null);
+      }
+    };
+
+    const handleCancelDelete = () => {
+      setShowDeleteDialog(false);
+      setAssignmentToDelete(null);
+    };
     
     return (
       <div id="wd-assignments">
@@ -64,10 +88,8 @@ export default function Assignments() {
               id="wd-assignment-list"
             >
               {assignments
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                .filter((assignment: any) => assignment.course === cid)
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                .map((assignment: any) => (
+                .filter((assignment: Assignment) => assignment.course === cid)
+                .map((assignment: Assignment) => (
                   <ListGroupItem
                     key={assignment._id}
                     className="wd-assignment-list-item list-group-item-action p-3 ps-1 d-flex justify-content-between align-items-center"
@@ -91,12 +113,31 @@ export default function Assignments() {
                         </div>
                       </span>
                     </Link>
-                    <ModuleControlButtons />
+                    <ModuleControlButtons
+                      onDelete={() => handleDeleteClick(assignment._id, assignment.title)}
+                    />
                   </ListGroupItem>
                 ))}
             </ListGroup>
           </ListGroupItem>
         </ListGroup>
+
+        <Modal show={showDeleteDialog} onHide={handleCancelDelete} centered>
+          <Modal.Header closeButton>
+            <Modal.Title>Delete Assignment</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            Are you sure you want to delete <strong>{assignmentToDelete?.title}</strong>? This action cannot be undone.
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleCancelDelete}>
+              Cancel
+            </Button>
+            <Button variant="danger" onClick={handleConfirmDelete}>
+              Delete
+            </Button>
+          </Modal.Footer>
+        </Modal>
       </div>
     );
   }
