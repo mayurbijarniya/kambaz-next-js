@@ -31,17 +31,17 @@ const assignmentsSlice = createSlice({
   reducers: {
     addAssignment: (state, { payload }: PayloadAction<AssignmentDraft>) => {
       const courseNumber = payload.course.substring(2); 
-      const firstDigitOfCourse = courseNumber.charAt(0); 
+      const courseLastDigit = courseNumber.charAt(2); 
       
       const existingIdsForCourse = state.assignments
         .filter((a) => {
           const id = a._id;
-          return id.startsWith("A") && id.length === 4 && id.charAt(1) === firstDigitOfCourse;
+          return id.startsWith("A") && id.length === 4 && id.charAt(1) === courseLastDigit;
         })
         .map((a) => parseInt(a._id.substring(1)))
         .sort((a, b) => b - a); 
       
-      const baseNumber = parseInt(`${firstDigitOfCourse}00`); 
+      const baseNumber = parseInt(`${courseLastDigit}00`); 
       const nextNumber = (existingIdsForCourse[0] || baseNumber) + 1;
       const newId = `A${nextNumber}`;
 
