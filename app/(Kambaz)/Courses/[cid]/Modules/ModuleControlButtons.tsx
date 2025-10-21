@@ -20,7 +20,7 @@ export default function ModuleControlButtons({
         className="text-primary me-3"
       />
       <FaTrash
-        className="text-danger me-2 mb-1"
+        className="text-danger me-3 mb-1"
         onClick={() => deleteModule(moduleId)}
       />
       <GreenCheckmark />
