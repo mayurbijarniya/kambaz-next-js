@@ -1,3 +1,5 @@
+"use client";
+import React from "react";
 import { useState } from "react";
 import { useSelector} from "react-redux";
 import { ListGroup} from "react-bootstrap";
