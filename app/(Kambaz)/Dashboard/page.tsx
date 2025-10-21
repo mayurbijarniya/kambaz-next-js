@@ -12,11 +12,14 @@ import CardTitle from "react-bootstrap/esm/CardTitle";
 import CardImg from "react-bootstrap/esm/CardImg";
 import FormControl from "react-bootstrap/esm/FormControl";
 import * as db from "../Database";
-import { v4 as uuidv4 } from "uuid";
+import { useDispatch, useSelector } from "react-redux";  
+import { addNewCourse, deleteCourse, updateCourse } from "../Courses/reducer"; 
 
 export default function Dashboard() {
-  const [courses, setCourses] = useState<any[]>(db.courses);
+  const { courses } = useSelector((state: any) => state.coursesReducer);
+  const dispatch = useDispatch();
 
+  // Keep course form state local (only Dashboard needs this)
   const [course, setCourse] = useState<any>({
     _id: "0",
     name: "New Course",
@@ -26,27 +29,6 @@ export default function Dashboard() {
     image: "/images/reactjs.jpg",
     description: "New Description",
   });
-
-  const addNewCourse = () => {
-    const newCourse = { ...course, _id: uuidv4() };
-    setCourses([...courses, newCourse]);
-  };
-
-  const deleteCourse = (courseId: string) => {
-    setCourses(courses.filter((c) => c._id !== courseId));
-  };
-
-  const updateCourse = () => {
-    setCourses(
-      courses.map((c) => {
-        if (c._id === course._id) {
-          return course;
-        } else {
-          return c;
-        }
-      })
-    );
-  };
 
   return (
     <div id="wd-dashboard" className="p-4">
@@ -59,7 +41,7 @@ export default function Dashboard() {
           className="float-end"
           variant="primary"
           id="wd-add-new-course-click"
-          onClick={addNewCourse}
+          onClick={() => dispatch(addNewCourse(course))}
         >
           Add
         </Button>
@@ -67,7 +49,7 @@ export default function Dashboard() {
           className="float-end me-2"
           variant="warning"
           id="wd-update-course-click"
-          onClick={updateCourse}
+          onClick={() => dispatch(updateCourse(course))}
         >
           Update
         </Button>
@@ -102,7 +84,7 @@ export default function Dashboard() {
 
       <div id="wd-dashboard-courses">
         <Row xs={1} md={5} className="g-4">
-          {courses.map((course) => (
+          {courses.map((course: any) => (
             <Col
               key={course._id}
               className="wd-dashboard-course"
@@ -151,7 +133,7 @@ export default function Dashboard() {
                           id="wd-delete-course-click"
                           onClick={(event) => {
                             event.preventDefault();
-                            deleteCourse(course._id);
+                            dispatch(deleteCourse(course._id));
                           }}
                         >
                           Delete
