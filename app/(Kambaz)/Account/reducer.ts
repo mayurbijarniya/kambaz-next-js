@@ -6,7 +6,7 @@ export type User = {
   firstName: string;
   lastName: string;
   email: string;
-  role: "FACULTY" | "STUDENT" | "TA" | "ADMIN";
+  role: string;  // Accept any string from database (FACULTY | STUDENT | TA | ADMIN)
   [key: string]: unknown;
 };
 
