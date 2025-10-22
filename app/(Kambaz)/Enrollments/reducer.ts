@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export type Enrollment = {
+  _id?: string;
   user: string;
   course: string;
 };

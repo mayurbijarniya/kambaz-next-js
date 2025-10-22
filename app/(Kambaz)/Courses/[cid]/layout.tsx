@@ -6,6 +6,8 @@ import Breadcrumb from "./Breadcrumb";
 import { useSelector } from "react-redux";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
+import type { Enrollment } from "../../Enrollments/reducer";
+import type { User } from "../../Account/reducer";
 
 type Course = {
   _id: string;
@@ -15,19 +17,6 @@ type Course = {
 
 type CoursesState = {
   courses: Course[];
-};
-
-type AccountState = {
-  currentUser: {
-    _id: string;
-    role: string;
-    [key: string]: unknown;
-  } | null;
-};
-
-type Enrollment = {
-  user: string;
-  course: string;
 };
 
 type EnrollmentsState = {
@@ -43,7 +32,7 @@ export default function CoursesLayout({
   const router = useRouter();
 
   const { courses } = useSelector((state: { coursesReducer: CoursesState }) => state.coursesReducer);
-  const { currentUser } = useSelector((state: { accountReducer: AccountState }) => state.accountReducer);
+  const { currentUser } = useSelector((state: { accountReducer: { currentUser: User | null } }) => state.accountReducer);
   const { enrollments } = useSelector((state: { enrollmentsReducer: EnrollmentsState }) => state.enrollmentsReducer);
 
   const course = courses.find((course: Course) => course._id === cid);

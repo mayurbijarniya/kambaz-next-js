@@ -15,18 +15,7 @@ import * as db from "../Database";
 import { useDispatch, useSelector } from "react-redux";
 import { addNewCourse, deleteCourse, updateCourse } from "../Courses/reducer";
 import { enrollCourse, unenrollCourse, setEnrollments, type Enrollment } from "../Enrollments/reducer";
-
-export type UserRole = "FACULTY" | "STUDENT" | "TA";
-
-export type User = {
-  _id: string;
-  username: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  role: UserRole;
-  [key: string]: unknown;
-};
+import type { User } from "../Account/reducer";
 
 export type Course = {
   _id: string;
@@ -44,17 +33,13 @@ type CoursesState = {
   courses: Course[];
 };
 
-type AccountState = {
-  currentUser: User | null;
-};
-
 type EnrollmentsState = {
   enrollments: Enrollment[];
 };
 
 export default function Dashboard() {
   const { courses } = useSelector((state: { coursesReducer: CoursesState }) => state.coursesReducer);
-  const { currentUser } = useSelector((state: { accountReducer: AccountState }) => state.accountReducer);
+  const { currentUser } = useSelector((state: { accountReducer: { currentUser: User | null } }) => state.accountReducer);
   const { enrollments } = useSelector((state: { enrollmentsReducer: EnrollmentsState }) => state.enrollmentsReducer);
   const dispatch = useDispatch();
 
@@ -101,13 +86,6 @@ export default function Dashboard() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser?._id]);
-
-  // Save enrollments to localStorage whenever they change (but only after initial load)
-  useEffect(() => {
-    if (enrollments.length > 0) {
-      localStorage.setItem("enrollments", JSON.stringify(enrollments));
-    }
-  }, [enrollments]);
 
   const isEnrolled = (courseId: string) => {
     return enrollments.some(
