@@ -22,7 +22,7 @@ const accountSlice = createSlice({
   name: "account",
   initialState,
   reducers: {
-    setCurrentUser: (state, action: PayloadAction<User>) => {
+    setCurrentUser: (state, action: PayloadAction<User | null>) => {
       state.currentUser = action.payload;
     },
   },
