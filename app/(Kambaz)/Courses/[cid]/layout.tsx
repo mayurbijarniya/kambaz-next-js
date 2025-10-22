@@ -4,7 +4,35 @@ import CourseNavigation from "./Navigation";
 import { FaAlignJustify } from "react-icons/fa6";
 import Breadcrumb from "./Breadcrumb";
 import { useSelector } from "react-redux";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect } from "react";
+
+type Course = {
+  _id: string;
+  name: string;
+  [key: string]: unknown;
+};
+
+type CoursesState = {
+  courses: Course[];
+};
+
+type AccountState = {
+  currentUser: {
+    _id: string;
+    role: string;
+    [key: string]: unknown;
+  } | null;
+};
+
+type Enrollment = {
+  user: string;
+  course: string;
+};
+
+type EnrollmentsState = {
+  enrollments: Enrollment[];
+};
 
 export default function CoursesLayout({
   children,
@@ -12,10 +40,28 @@ export default function CoursesLayout({
   children: ReactNode;
 }>) {
   const { cid } = useParams();
-  
-  const { courses } = useSelector((state: any) => state.coursesReducer);
-  
-  const course = courses.find((course: any) => course._id === cid);
+  const router = useRouter();
+
+  const { courses } = useSelector((state: { coursesReducer: CoursesState }) => state.coursesReducer);
+  const { currentUser } = useSelector((state: { accountReducer: AccountState }) => state.accountReducer);
+  const { enrollments } = useSelector((state: { enrollmentsReducer: EnrollmentsState }) => state.enrollmentsReducer);
+
+  const course = courses.find((course: Course) => course._id === cid);
+
+  // Check if user is enrolled in the course (or is Faculty)
+  useEffect(() => {
+    if (currentUser && cid && !Array.isArray(cid)) {
+      const isEnrolled = enrollments.some(
+        (e: Enrollment) => e.user === currentUser._id && e.course === cid
+      );
+      const isFaculty = currentUser.role === "FACULTY";
+
+      // If not enrolled and not faculty, redirect to dashboard
+      if (!isEnrolled && !isFaculty) {
+        router.push("/Dashboard");
+      }
+    }
+  }, [currentUser, cid, enrollments, router]);
 
   return (
     <div id="wd-courses">
