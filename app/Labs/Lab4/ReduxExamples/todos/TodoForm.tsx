@@ -11,7 +11,7 @@ export default function TodoForm() {
     <ListGroup.Item className="d-flex align-items-center gap-2 flex-nowrap">
       <FormControl
         className="flex-grow-1"
-        defaultValue={todo.title}
+        value={todo.title}
         onChange={(e) => 
           dispatch(setTodo({ ...todo, title: e.target.value }))
         }
