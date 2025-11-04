@@ -60,7 +60,7 @@ export default function WorkingWithObjects() {
         defaultValue={module.name} onChange={(e) =>
           setModule({ ...module, name: e.target.value })}/>
       <a id="wd-update-module-name"
-         className="btn btn-primary d-inline-block"
+         className="btn btn-primary d-inline-block float-end"
          href={`${MODULE_API_URL}/name/${module.name}`}>
         Update Module Name </a>
       <hr />
@@ -70,7 +70,7 @@ export default function WorkingWithObjects() {
         defaultValue={module.description} onChange={(e) =>
           setModule({ ...module, description: e.target.value })}/>
       <a id="wd-update-module-description"
-         className="btn btn-primary d-inline-block"
+         className="btn btn-primary d-inline-block float-end"
          href={`${MODULE_API_URL}/description/${module.description}`}>
         Update Module Description </a>
       <hr />
