@@ -4,12 +4,14 @@ import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setCurrentUser } from "../reducer";
 import { Button, FormControl } from "react-bootstrap";
+import * as client from "../client";
+import { RootState } from "../../store";
 
 export default function Profile() {
   const [profile, setProfile] = useState<any>({});
   const dispatch = useDispatch();
   const router = useRouter();
-  const { currentUser } = useSelector((state: any) => state.accountReducer);
+  const { currentUser } = useSelector((state: RootState) => state.accountReducer);
 
   const fetchProfile = () => {
     if (!currentUser) {
@@ -17,6 +19,11 @@ export default function Profile() {
       return;
     }
     setProfile(currentUser);
+  };
+
+  const updateProfile = async () => {
+    const updatedProfile = await client.updateUser(profile);
+    dispatch(setCurrentUser(updatedProfile));
   };
 
   const signout = () => {
@@ -97,14 +104,17 @@ export default function Profile() {
             <option value="FACULTY">Faculty</option>
             <option value="STUDENT">Student</option>
           </FormControl>
-          <Button
-            onClick={signout}
-            className="w-100 mb-2"
-            variant="danger"
-            id="wd-signout-btn"
-          >
-            Sign out
-          </Button>
+          <div>
+            <button onClick={updateProfile} className="btn btn-primary w-100 mb-2"> Update </button>
+            <Button
+              onClick={signout}
+              className="w-100 mb-2"
+              variant="danger"
+              id="wd-signout-btn"
+            >
+              Sign out
+            </Button>
+          </div>
         </div>
       )}
     </div>
