@@ -13,7 +13,7 @@ import CardImg from "react-bootstrap/esm/CardImg";
 import FormControl from "react-bootstrap/esm/FormControl";
 import * as client from "../Courses/client";
 import { useDispatch, useSelector } from "react-redux";
-import { addNewCourse, deleteCourse, updateCourse, setCourses } from "../Courses/reducer";
+import { updateCourse, setCourses } from "../Courses/reducer";
 import { enrollCourse, unenrollCourse, setEnrollments, type Enrollment } from "../Enrollments/reducer";
 import type { User } from "../Account/reducer";
 
@@ -70,11 +70,16 @@ export default function Dashboard() {
     });
   };
 
-  const handleAddCourse = () => {
-    // Only add if name and number are not empty
-    if (course.name.trim() && course.number.trim()) {
-      dispatch(addNewCourse(course));
+  const onAddNewCourse = async () => {
+    if (!course.name.trim() || !course.number.trim()) {
+      return;
+    }
+    try {
+      const newCourse = await client.createCourse(course);
+      dispatch(setCourses([...courses, newCourse]));
       resetCourseForm();
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -110,6 +115,15 @@ export default function Dashboard() {
     }
   };
 
+  const onDeleteCourse = async (courseId: string) => {
+    try {
+      await client.deleteCourse(courseId);
+      dispatch(setCourses(courses.filter((course) => course._id !== courseId)));
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const displayedCourses = courses;
 
   return (
@@ -134,7 +148,7 @@ export default function Dashboard() {
               className="float-end"
               variant="primary"
               id="wd-add-new-course-click"
-              onClick={handleAddCourse}
+              onClick={onAddNewCourse}
             >
               Add
             </Button>
@@ -258,7 +272,7 @@ export default function Dashboard() {
                               id="wd-delete-course-click"
                               onClick={(event) => {
                                 event.preventDefault();
-                                dispatch(deleteCourse(course._id));
+                                onDeleteCourse(course._id);
                               }}
                             >
                               Delete
