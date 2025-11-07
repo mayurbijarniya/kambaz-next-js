@@ -38,6 +38,12 @@ export default function Modules() {
     dispatch(setModules(modules.filter((m: any) => m._id !== moduleId)));
   };
 
+  const onUpdateModule = async (module: any) => {
+    await client.updateModule(module);
+    const newModules = modules.map((m: any) => m._id === module._id ? module : m);
+    dispatch(setModules(newModules));
+  };
+
   useEffect(() => {
     fetchModules();
   }, []);
@@ -65,7 +71,7 @@ export default function Modules() {
                 {module.editing && (
                   <FormControl
                     className="w-50 d-inline-block"
-                    defaultValue={module.name}
+                    value={module.name}
                     onChange={(e) =>
                       dispatch(
                         updateModule({ ...module, name: e.target.value })
@@ -73,7 +79,7 @@ export default function Modules() {
                     }
                     onKeyDown={(e) => {
                       if (e.key === "Enter") {
-                        dispatch(updateModule({ ...module, editing: false }));
+                        onUpdateModule({ ...module, editing: false });
                       }
                     }}
                   />
