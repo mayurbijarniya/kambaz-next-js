@@ -6,7 +6,6 @@ import Breadcrumb from "./Breadcrumb";
 import { useSelector } from "react-redux";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
-import type { Enrollment } from "../../Enrollments/reducer";
 import type { User } from "../../Account/reducer";
 
 type Course = {
@@ -19,10 +18,6 @@ type CoursesState = {
   courses: Course[];
 };
 
-type EnrollmentsState = {
-  enrollments: Enrollment[];
-};
-
 export default function CoursesLayout({
   children,
 }: Readonly<{
@@ -33,24 +28,26 @@ export default function CoursesLayout({
 
   const { courses } = useSelector((state: { coursesReducer: CoursesState }) => state.coursesReducer);
   const { currentUser } = useSelector((state: { accountReducer: { currentUser: User | null } }) => state.accountReducer);
-  const { enrollments } = useSelector((state: { enrollmentsReducer: EnrollmentsState }) => state.enrollmentsReducer);
 
   const course = courses.find((course: Course) => course._id === cid);
 
   // Check if user is enrolled in the course (or is Faculty)
+  // Since courses array contains only enrolled courses (fetched from server),
+  // we check if the course exists in the courses array
+  // Only check if user is logged in (allow access when not logged in for testing)
   useEffect(() => {
     if (currentUser && cid && !Array.isArray(cid)) {
-      const isEnrolled = enrollments.some(
-        (e: Enrollment) => e.user === currentUser._id && e.course === cid
-      );
+      const isEnrolled = courses.some((c: Course) => c._id === cid);
       const isFaculty = currentUser.role === "FACULTY";
 
       // If not enrolled and not faculty, redirect to dashboard
+      // If no currentUser, allow access (for testing API endpoints)
       if (!isEnrolled && !isFaculty) {
         router.push("/Dashboard");
       }
     }
-  }, [currentUser, cid, enrollments, router]);
+    // If currentUser is null/undefined, allow access (for testing)
+  }, [currentUser, cid, courses, router]);
 
   return (
     <div id="wd-courses">
