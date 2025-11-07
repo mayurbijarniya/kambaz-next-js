@@ -5,6 +5,7 @@ import { Container, Row, Col, Form } from "react-bootstrap";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addAssignment, updateAssignment } from "../reducer";
+import * as client from "../../../client";
 
 export default function AssignmentPage() {
   const { cid, aid } = useParams<{ cid: string; aid: string }>();
@@ -42,42 +43,46 @@ export default function AssignmentPage() {
     }
   }, [isNew, existingAssignment]);
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!title.trim()) {
       alert("Please enter an assignment name");
       return;
     }
 
-    if (isNew) {
-      // Create new assignment
-      dispatch(
-        addAssignment({
+    if (!cid || Array.isArray(cid)) return;
+
+    try {
+      if (isNew) {
+        // Create new assignment
+        const newAssignment = await client.createAssignmentForCourse(cid, {
           title,
           description,
           points,
-          dueOn,
-          availableOn,
-          availableUntil,
-          course: cid,
-        })
-      );
-    } else if (existingAssignment) {
-      // Update existing assignment
-      dispatch(
-        updateAssignment({
+          dueOn: dueOn || null,
+          availableOn: availableOn || null,
+          availableUntil: availableUntil || null,
+        });
+        dispatch(addAssignment(newAssignment));
+      } else if (existingAssignment) {
+        // Update existing assignment
+        const updatedAssignment = await client.updateAssignment({
           ...existingAssignment,
           title,
           description,
           points,
-          dueOn,
-          availableOn,
-          availableUntil,
-        })
-      );
-    }
+          dueOn: dueOn || null,
+          availableOn: availableOn || null,
+          availableUntil: availableUntil || null,
+        });
+        dispatch(updateAssignment(updatedAssignment));
+      }
 
-    // Navigate back to assignments
-    router.push(`/Courses/${cid}/Assignments`);
+      // Navigate back to assignments
+      router.push(`/Courses/${cid}/Assignments`);
+    } catch (error) {
+      console.error(error);
+      alert("Failed to save assignment. Please try again.");
+    }
   };
 
   const handleCancel = () => {

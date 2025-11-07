@@ -10,9 +10,10 @@ import { BsGripVertical } from "react-icons/bs";
 import { BsFillCaretDownFill } from "react-icons/bs";
 import { BsPencilSquare } from "react-icons/bs";
 import { useSelector, useDispatch } from "react-redux";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Modal, Button } from "react-bootstrap";
-import { deleteAssignment, type Assignment } from "./reducer";
+import { setAssignments, deleteAssignment, type Assignment } from "./reducer";
+import * as client from "../../client";
 
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
@@ -46,16 +47,34 @@ export default function Assignments() {
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
     const [assignmentToDelete, setAssignmentToDelete] = useState<{ _id: string; title: string } | null>(null);
 
+    useEffect(() => {
+      const fetchAssignments = async () => {
+        if (!cid || Array.isArray(cid)) return;
+        try {
+          const fetchedAssignments = await client.findAssignmentsForCourse(cid);
+          dispatch(setAssignments(fetchedAssignments));
+        } catch (error) {
+          console.error(error);
+        }
+      };
+      fetchAssignments();
+    }, [cid, dispatch]);
+
     const handleDeleteClick = (assignmentId: string, assignmentTitle: string) => {
       setAssignmentToDelete({ _id: assignmentId, title: assignmentTitle });
       setShowDeleteDialog(true);
     };
 
-    const handleConfirmDelete = () => {
+    const handleConfirmDelete = async () => {
       if (assignmentToDelete) {
-        dispatch(deleteAssignment(assignmentToDelete._id));
-        setShowDeleteDialog(false);
-        setAssignmentToDelete(null);
+        try {
+          await client.deleteAssignment(assignmentToDelete._id);
+          dispatch(deleteAssignment(assignmentToDelete._id));
+          setShowDeleteDialog(false);
+          setAssignmentToDelete(null);
+        } catch (error) {
+          console.error(error);
+        }
       }
     };
 
@@ -87,9 +106,7 @@ export default function Assignments() {
               className="wd-assignment-list rounded-0"
               id="wd-assignment-list"
             >
-              {assignments
-                .filter((assignment: Assignment) => assignment.course === cid)
-                .map((assignment: Assignment) => (
+              {assignments.map((assignment: Assignment) => (
                   <ListGroupItem
                     key={assignment._id}
                     className="wd-assignment-list-item list-group-item-action p-3 ps-1 d-flex justify-content-between align-items-center"
@@ -103,12 +120,11 @@ export default function Assignments() {
                       className="d-flex text-decoration-none flex-grow-1 me-3"
                     >
                       <span>
-                        <span className="wd-assignment-link fw-semibold text-decoration-none text-body-secondary fs-5">
-                          {assignment._id}
+                        <span className="wd-assignment-link fw-semibold text-decoration-none text-black fs-5">
+                          {assignment.title}
                         </span>
                         <div className="wd-assignment-details text-body-secondary">
-                          <span className="text-danger">{assignment.title}</span>{" "}
-                          | <strong>Not available until</strong> {formatDateTime(assignment.availableOn)} |{" "}
+                        <span className="text-danger">Multiple Modules</span>{" "} | <strong>Not available until</strong> {formatDateTime(assignment.availableOn)} |{" "}
                           <strong>Due</strong> {formatDateTime(assignment.dueOn)} | {assignment.points ?? 0} pts
                         </div>
                       </span>
