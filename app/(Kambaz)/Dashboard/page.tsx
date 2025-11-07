@@ -13,7 +13,7 @@ import CardImg from "react-bootstrap/esm/CardImg";
 import FormControl from "react-bootstrap/esm/FormControl";
 import * as client from "../Courses/client";
 import { useDispatch, useSelector } from "react-redux";
-import { updateCourse, setCourses } from "../Courses/reducer";
+import { setCourses } from "../Courses/reducer";
 import { enrollCourse, unenrollCourse, setEnrollments, type Enrollment } from "../Enrollments/reducer";
 import type { User } from "../Account/reducer";
 
@@ -124,6 +124,18 @@ export default function Dashboard() {
     }
   };
 
+  const onUpdateCourse = async () => {
+    try {
+      await client.updateCourse(course);
+      dispatch(setCourses(courses.map((c) => {
+        if (c._id === course._id) { return course; }
+        else { return c; }
+      })));
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const displayedCourses = courses;
 
   return (
@@ -156,7 +168,7 @@ export default function Dashboard() {
               className="float-end me-2"
               variant="warning"
               id="wd-update-course-click"
-              onClick={() => dispatch(updateCourse(course))}
+              onClick={onUpdateCourse}
             >
               Update
             </Button>
