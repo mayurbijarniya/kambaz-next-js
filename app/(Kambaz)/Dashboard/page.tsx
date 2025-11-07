@@ -11,9 +11,9 @@ import CardText from "react-bootstrap/esm/CardText";
 import CardTitle from "react-bootstrap/esm/CardTitle";
 import CardImg from "react-bootstrap/esm/CardImg";
 import FormControl from "react-bootstrap/esm/FormControl";
-import * as db from "../Database";
+import * as client from "../Courses/client";
 import { useDispatch, useSelector } from "react-redux";
-import { addNewCourse, deleteCourse, updateCourse } from "../Courses/reducer";
+import { addNewCourse, deleteCourse, updateCourse, setCourses } from "../Courses/reducer";
 import { enrollCourse, unenrollCourse, setEnrollments, type Enrollment } from "../Enrollments/reducer";
 import type { User } from "../Account/reducer";
 
@@ -78,14 +78,18 @@ export default function Dashboard() {
     }
   };
 
-  // Initialize enrollments from database on component mount
-  useEffect(() => {
-    if (currentUser?._id && enrollments.length === 0) {
-      // Always load from database on first mount (empty enrollments in Redux)
-      dispatch(setEnrollments(db.enrollments));
+  const fetchCourses = async () => {
+    try {
+      const courses = await client.findMyCourses();
+      dispatch(setCourses(courses));
+    } catch (error) {
+      console.error(error);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentUser?._id]);
+  };
+
+  useEffect(() => {
+    fetchCourses();
+  }, [currentUser]);
 
   const isEnrolled = (courseId: string) => {
     return enrollments.some(
@@ -106,9 +110,7 @@ export default function Dashboard() {
     }
   };
 
-  const displayedCourses = showAllCourses
-    ? courses
-    : courses.filter((course: Course) => isEnrolled(course._id));
+  const displayedCourses = courses;
 
   return (
     <div id="wd-dashboard" className="p-4">
