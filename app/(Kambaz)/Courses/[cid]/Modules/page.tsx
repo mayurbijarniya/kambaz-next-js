@@ -7,7 +7,7 @@ import LessonControlButtons from "./LessonControlButtons";
 import ModuleControlButtons from "./ModuleControlButtons";
 import { BsGripVertical } from "react-icons/bs";
 import { useSelector, useDispatch } from "react-redux";
-import { setModules, addModule, editModule, updateModule, deleteModule } from "./reducer";
+import { setModules, editModule, updateModule, deleteModule } from "./reducer";
 import { useState, useEffect } from "react";
 import { FormControl } from "react-bootstrap";
 import * as client from "../../client";
@@ -25,6 +25,14 @@ export default function Modules() {
     dispatch(setModules(modules));
   };
 
+  const onCreateModuleForCourse = async () => {
+    if (!cid || Array.isArray(cid)) return;
+    const newModule = { name: moduleName, course: cid };
+    const module = await client.createModuleForCourse(cid, newModule);
+    dispatch(setModules([...modules, module]));
+    setModuleName("");
+  };
+
   useEffect(() => {
     fetchModules();
   }, []);
@@ -34,10 +42,7 @@ export default function Modules() {
       <ModulesControls
         moduleName={moduleName}
         setModuleName={setModuleName}
-        addModule={() => {
-          dispatch(addModule({ name: moduleName, course: cid }));
-          setModuleName("");
-        }}
+        addModule={onCreateModuleForCourse}
       />
       <br />
       <br />
