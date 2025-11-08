@@ -83,18 +83,34 @@ export default function Dashboard() {
     }
   };
 
-  const fetchCourses = async () => {
-    try {
-      const courses = await client.findMyCourses();
-      dispatch(setCourses(courses));
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        if (showAllCourses) {
+          const allCourses = await client.fetchAllCourses();
+          dispatch(setCourses(allCourses));
+        } else {
+          const courses = await client.findMyCourses();
+          dispatch(setCourses(courses));
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    const fetchEnrollments = async () => {
+      if (!currentUser) return;
+      try {
+        const fetchedEnrollments = await client.findEnrollmentsForUser();
+        dispatch(setEnrollments(fetchedEnrollments));
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
     fetchCourses();
-  }, [currentUser]);
+    fetchEnrollments();
+  }, [currentUser, dispatch, showAllCourses]);
 
   const isEnrolled = (courseId: string) => {
     return enrollments.some(
@@ -103,15 +119,41 @@ export default function Dashboard() {
     );
   };
 
-  const handleEnroll = (courseId: string) => {
-    if (currentUser?._id) {
+  const handleEnroll = async (courseId: string) => {
+    if (!currentUser?._id) return;
+    try {
+      const enrollment = await client.enrollUserInCourse(courseId);
       dispatch(enrollCourse({ user: currentUser._id, course: courseId }));
+      const fetchedEnrollments = await client.findEnrollmentsForUser();
+      dispatch(setEnrollments(fetchedEnrollments));
+      if (showAllCourses) {
+        const allCourses = await client.fetchAllCourses();
+        dispatch(setCourses(allCourses));
+      } else {
+        const courses = await client.findMyCourses();
+        dispatch(setCourses(courses));
+      }
+    } catch (error) {
+      console.error(error);
     }
   };
 
-  const handleUnenroll = (courseId: string) => {
-    if (currentUser?._id) {
+  const handleUnenroll = async (courseId: string) => {
+    if (!currentUser?._id) return;
+    try {
+      await client.unenrollUserFromCourse(courseId);
       dispatch(unenrollCourse({ user: currentUser._id, course: courseId }));
+      const fetchedEnrollments = await client.findEnrollmentsForUser();
+      dispatch(setEnrollments(fetchedEnrollments));
+      if (showAllCourses) {
+        const allCourses = await client.fetchAllCourses();
+        dispatch(setCourses(allCourses));
+      } else {
+        const courses = await client.findMyCourses();
+        dispatch(setCourses(courses));
+      }
+    } catch (error) {
+      console.error(error);
     }
   };
 

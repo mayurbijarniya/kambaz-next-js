@@ -83,3 +83,18 @@ export const updateAssignment = async (assignment: any) => {
   return data;
 };
 
+export const enrollUserInCourse = async (courseId: string) => {
+  const { data } = await axiosWithCredentials.post(`${USERS_API}/current/enrollments/${courseId}`);
+  return data;
+};
+
+export const unenrollUserFromCourse = async (courseId: string) => {
+  const { data } = await axiosWithCredentials.delete(`${USERS_API}/current/enrollments/${courseId}`);
+  return data;
+};
+
+export const findEnrollmentsForUser = async () => {
+  const { data } = await axiosWithCredentials.get(`${USERS_API}/current/enrollments`);
+  return data;
+};
+
