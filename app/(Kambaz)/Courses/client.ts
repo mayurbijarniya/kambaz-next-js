@@ -98,3 +98,13 @@ export const findEnrollmentsForUser = async () => {
   return data;
 };
 
+export const findUsersForCourse = async (courseId: string) => {
+  const { data } = await axios.get(`${COURSES_API}/${courseId}/users`);
+  return data;
+};
+
+export const enrollUserInCourseByFaculty = async (courseId: string, userId: string) => {
+  const { data } = await axiosWithCredentials.post(`${COURSES_API}/${courseId}/users/${userId}/enroll`);
+  return data;
+};
+
