@@ -78,7 +78,15 @@ export default function WorkingWithArraysAsynchronously() {
           className="text-primary float-end fs-3 me-3"
           style={{ cursor: "pointer" }}
           id="wd-post-todo"
-        /></h4>
+        />
+        <button
+          onClick={() => deleteTodo({ id: 1234, title: "Test", completed: false })}
+          className="btn btn-danger btn-sm float-end me-2"
+          id="wd-test-delete-error"
+        >
+          Test Delete Error (ID: 1234)
+        </button>
+        </h4>
       <ListGroup>
         {todos.map((todo) => (
           <ListGroupItem key={todo.id}>
