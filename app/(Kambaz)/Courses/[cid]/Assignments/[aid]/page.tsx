@@ -52,8 +52,8 @@ export default function AssignmentPage() {
     if (!cid || Array.isArray(cid)) return;
 
     try {
-      if (isNew) {
-        // Create new assignment
+    if (isNew) {
+      // Create new assignment
         const newAssignment = await client.createAssignmentForCourse(cid, {
           title,
           description,
@@ -63,8 +63,8 @@ export default function AssignmentPage() {
           availableUntil: availableUntil || null,
         });
         dispatch(addAssignment(newAssignment));
-      } else if (existingAssignment) {
-        // Update existing assignment
+    } else if (existingAssignment) {
+      // Update existing assignment
         const updatedAssignment = await client.updateAssignment({
           ...existingAssignment,
           title,
@@ -75,10 +75,10 @@ export default function AssignmentPage() {
           availableUntil: availableUntil || null,
         });
         dispatch(updateAssignment(updatedAssignment));
-      }
+    }
 
-      // Navigate back to assignments
-      router.push(`/Courses/${cid}/Assignments`);
+    // Navigate back to assignments
+    router.push(`/Courses/${cid}/Assignments`);
     } catch (error) {
       console.error(error);
       alert("Failed to save assignment. Please try again.");
