@@ -32,7 +32,7 @@ export default function CoursesLayout({
   const { courses } = useSelector((state: { coursesReducer: CoursesState }) => state.coursesReducer);
   const { currentUser } = useSelector((state: { accountReducer: { currentUser: User | null } }) => state.accountReducer);
 
-  const course = courses.find((course: Course) => course._id === cid);
+  const course = courses.filter((c: Course) => c && c._id).find((course: Course) => course._id === cid);
 
   useEffect(() => {
     if (currentUser && courses.length === 0) {
@@ -53,7 +53,7 @@ export default function CoursesLayout({
       if (courses.length === 0) {
         return;
       }
-      const isEnrolled = courses.some((c: Course) => c._id === cid);
+      const isEnrolled = courses.filter((c: Course) => c && c._id).some((c: Course) => c._id === cid);
       const isFaculty = currentUser.role === "FACULTY";
 
       if (!isEnrolled && !isFaculty) {
