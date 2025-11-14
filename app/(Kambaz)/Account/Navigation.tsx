@@ -28,6 +28,17 @@ export default function AccountNavigation() {
           </Link>
         );
       })}
+      {currentUser && currentUser.role === "ADMIN" && (
+        <Link
+          href="/Account/Users"
+          id="wd-account-users-link"
+          className={`list-group-item border-0 ${
+            pathname?.endsWith('Users') ? "active" : "text-danger"
+          }`}
+        >
+          Users
+        </Link>
+      )}
     </div>
   );
 }
