@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
-import { FormControl } from "react-bootstrap";
+import { FormControl, Button } from "react-bootstrap";
+import { FaPlus } from "react-icons/fa";
 import PeopleTable from "../../Courses/[cid]/People/Table";
 import * as client from "../client";
 
@@ -37,13 +38,32 @@ export default function Users() {
     }
   };
 
+  const createUser = async () => {
+    const user = await client.createUser({
+      firstName: "New",
+      lastName: `User${users.length + 1}`,
+      username: `newuser${Date.now()}`,
+      password: "password123",
+      email: `email${users.length + 1}@neu.edu`,
+      section: "S101",
+      role: "STUDENT",
+    });
+    setUsers([...users, user]);
+  };
+
   useEffect(() => {
     fetchUsers();
   }, [uid]);
 
   return (
     <div>
-      <h3>Users</h3>
+      <div className="d-flex justify-content-between align-items-center mb-3">
+        <h3>Users</h3>
+        <Button onClick={createUser} className="float-end btn btn-danger wd-add-people">
+          <FaPlus className="me-2" />
+          Users
+        </Button>
+      </div>
       <div className="d-flex gap-2 mb-3">
         <FormControl
           onChange={(e) => filterUsersByName(e.target.value)}
