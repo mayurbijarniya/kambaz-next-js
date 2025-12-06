@@ -31,7 +31,7 @@ export default function PeopleTable() {
     try {
       const courseUsers = await client.findUsersForCourse(cid);
       console.log("Fetched users for course:", cid, courseUsers);
-      setUsers(courseUsers || []);
+      setUsers((courseUsers || []).filter((u: any) => u));
     } catch (error) {
       console.error("Error fetching users:", error);
     }
@@ -82,10 +82,10 @@ export default function PeopleTable() {
       const createdUser = await userClient.createUser(newUser);
       // Enroll the new user in the current course
       await client.enrollUserInCourseByFaculty(cid, createdUser._id);
-      
+
       // Refresh users list after enrollment
       await fetchUsers();
-      
+
       setShowCreateModal(false);
       setNewUser({
         username: "",
@@ -121,17 +121,17 @@ export default function PeopleTable() {
     setShowEditModal(true);
   };
 
- return (
-  <div id="wd-people-table">
-      {currentUser?.role === "FACULTY" && (
+  return (
+    <div id="wd-people-table">
+      { currentUser?.role === "FACULTY" && (
         <div className="mb-3">
-          <Button variant="primary" onClick={() => setShowCreateModal(true)}>
+          <Button variant="primary" onClick={ () => setShowCreateModal(true) }>
             Create User
           </Button>
         </div>
-      )}
+      ) }
 
-   <Table striped>
+      <Table striped>
         <thead>
           <tr>
             <th>Name</th>
@@ -140,48 +140,48 @@ export default function PeopleTable() {
             <th>Role</th>
             <th>Last Activity</th>
             <th>Total Activity</th>
-            {currentUser?.role === "FACULTY" && <th>Actions</th>}
+            { currentUser?.role === "FACULTY" && <th>Actions</th> }
           </tr>
-    </thead>
-    <tbody>
-          {users.map((user: any) => (
-      <tr key={user._id}>
-        <td className="wd-full-name text-nowrap">
-          <FaUserCircle className="me-2 fs-1 text-secondary" />
-                <span className="wd-first-name">{user.firstName}</span>{" "}
-          <span className="wd-last-name">{user.lastName}</span>
-        </td>
-              <td className="wd-login-id">{user.loginId || user.username}</td>
-              <td className="wd-section">{user.section || "N/A"}</td>
-        <td className="wd-role">{user.role}</td>
-              <td className="wd-last-activity">{user.lastActivity || "N/A"}</td>
-              <td className="wd-total-activity">{user.totalActivity || "N/A"}</td>
-              {currentUser?.role === "FACULTY" && (
+        </thead>
+        <tbody>
+          { users.map((user: any) => (
+            <tr key={ user._id }>
+              <td className="wd-full-name text-nowrap">
+                <FaUserCircle className="me-2 fs-1 text-secondary" />
+                <span className="wd-first-name">{ user.firstName }</span>{ " " }
+                <span className="wd-last-name">{ user.lastName }</span>
+              </td>
+              <td className="wd-login-id">{ user.loginId || user.username }</td>
+              <td className="wd-section">{ user.section || "N/A" }</td>
+              <td className="wd-role">{ user.role }</td>
+              <td className="wd-last-activity">{ user.lastActivity || "N/A" }</td>
+              <td className="wd-total-activity">{ user.totalActivity || "N/A" }</td>
+              { currentUser?.role === "FACULTY" && (
                 <td>
                   <Button
                     variant="warning"
                     size="sm"
                     className="me-2"
-                    onClick={() => handleEditClick(user)}
+                    onClick={ () => handleEditClick(user) }
                   >
                     Edit
                   </Button>
                   <Button
                     variant="danger"
                     size="sm"
-                    onClick={() => handleDeleteUser(user._id)}
+                    onClick={ () => handleDeleteUser(user._id) }
                   >
                     Delete
                   </Button>
                 </td>
-              )}
-      </tr>
-    ))}
-</tbody>
-   </Table>
+              ) }
+            </tr>
+          )) }
+        </tbody>
+      </Table>
 
-      {/* Create User Modal */}
-      <Modal show={showCreateModal} onHide={() => setShowCreateModal(false)}>
+      {/* Create User Modal */ }
+      <Modal show={ showCreateModal } onHide={ () => setShowCreateModal(false) }>
         <Modal.Header closeButton>
           <Modal.Title>Create User</Modal.Title>
         </Modal.Header>
@@ -189,52 +189,52 @@ export default function PeopleTable() {
           <FormControl
             className="mb-2"
             placeholder="Username"
-            value={newUser.username}
-            onChange={(e) => setNewUser({ ...newUser, username: e.target.value })}
+            value={ newUser.username }
+            onChange={ (e) => setNewUser({ ...newUser, username: e.target.value }) }
           />
           <FormControl
             className="mb-2"
             type="password"
             placeholder="Password"
-            value={newUser.password}
-            onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
+            value={ newUser.password }
+            onChange={ (e) => setNewUser({ ...newUser, password: e.target.value }) }
           />
           <FormControl
             className="mb-2"
             placeholder="First Name"
-            value={newUser.firstName}
-            onChange={(e) => setNewUser({ ...newUser, firstName: e.target.value })}
+            value={ newUser.firstName }
+            onChange={ (e) => setNewUser({ ...newUser, firstName: e.target.value }) }
           />
           <FormControl
             className="mb-2"
             placeholder="Last Name"
-            value={newUser.lastName}
-            onChange={(e) => setNewUser({ ...newUser, lastName: e.target.value })}
+            value={ newUser.lastName }
+            onChange={ (e) => setNewUser({ ...newUser, lastName: e.target.value }) }
           />
           <FormControl
             className="mb-2"
             type="email"
             placeholder="Email"
-            value={newUser.email}
-            onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
+            value={ newUser.email }
+            onChange={ (e) => setNewUser({ ...newUser, email: e.target.value }) }
           />
           <FormControl
             className="mb-2"
             placeholder="Login ID"
-            value={newUser.loginId}
-            onChange={(e) => setNewUser({ ...newUser, loginId: e.target.value })}
+            value={ newUser.loginId }
+            onChange={ (e) => setNewUser({ ...newUser, loginId: e.target.value }) }
           />
           <FormControl
             className="mb-2"
             placeholder="Section"
-            value={newUser.section}
-            onChange={(e) => setNewUser({ ...newUser, section: e.target.value })}
+            value={ newUser.section }
+            onChange={ (e) => setNewUser({ ...newUser, section: e.target.value }) }
           />
           <FormControl
             as="select"
             className="mb-2"
-            value={newUser.role}
-            onChange={(e) => setNewUser({ ...newUser, role: e.target.value })}
+            value={ newUser.role }
+            onChange={ (e) => setNewUser({ ...newUser, role: e.target.value }) }
           >
             <option value="STUDENT">STUDENT</option>
             <option value="FACULTY">FACULTY</option>
@@ -242,72 +242,72 @@ export default function PeopleTable() {
           </FormControl>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowCreateModal(false)}>
+          <Button variant="secondary" onClick={ () => setShowCreateModal(false) }>
             Cancel
           </Button>
-          <Button variant="primary" onClick={handleCreateUser}>
+          <Button variant="primary" onClick={ handleCreateUser }>
             Create
           </Button>
         </Modal.Footer>
       </Modal>
 
-      {/* Edit User Modal */}
-      <Modal show={showEditModal} onHide={() => setShowEditModal(false)}>
+      {/* Edit User Modal */ }
+      <Modal show={ showEditModal } onHide={ () => setShowEditModal(false) }>
         <Modal.Header closeButton>
           <Modal.Title>Edit User</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {editingUser && (
+          { editingUser && (
             <>
               <FormControl
                 className="mb-2"
                 placeholder="First Name"
-                value={editingUser.firstName || ""}
-                onChange={(e) => setEditingUser({ ...editingUser, firstName: e.target.value })}
+                value={ editingUser.firstName || "" }
+                onChange={ (e) => setEditingUser({ ...editingUser, firstName: e.target.value }) }
               />
               <FormControl
                 className="mb-2"
                 placeholder="Last Name"
-                value={editingUser.lastName || ""}
-                onChange={(e) => setEditingUser({ ...editingUser, lastName: e.target.value })}
+                value={ editingUser.lastName || "" }
+                onChange={ (e) => setEditingUser({ ...editingUser, lastName: e.target.value }) }
               />
               <FormControl
                 className="mb-2"
                 type="email"
                 placeholder="Email"
-                value={editingUser.email || ""}
-                onChange={(e) => setEditingUser({ ...editingUser, email: e.target.value })}
+                value={ editingUser.email || "" }
+                onChange={ (e) => setEditingUser({ ...editingUser, email: e.target.value }) }
               />
               <FormControl
                 className="mb-2"
                 placeholder="Login ID"
-                value={editingUser.loginId || ""}
-                onChange={(e) => setEditingUser({ ...editingUser, loginId: e.target.value })}
+                value={ editingUser.loginId || "" }
+                onChange={ (e) => setEditingUser({ ...editingUser, loginId: e.target.value }) }
               />
               <FormControl
                 className="mb-2"
                 placeholder="Section"
-                value={editingUser.section || ""}
-                onChange={(e) => setEditingUser({ ...editingUser, section: e.target.value })}
+                value={ editingUser.section || "" }
+                onChange={ (e) => setEditingUser({ ...editingUser, section: e.target.value }) }
               />
               <FormControl
                 as="select"
                 className="mb-2"
-                value={editingUser.role || "STUDENT"}
-                onChange={(e) => setEditingUser({ ...editingUser, role: e.target.value })}
+                value={ editingUser.role || "STUDENT" }
+                onChange={ (e) => setEditingUser({ ...editingUser, role: e.target.value }) }
               >
                 <option value="STUDENT">STUDENT</option>
                 <option value="FACULTY">FACULTY</option>
                 <option value="TA">TA</option>
               </FormControl>
             </>
-          )}
+          ) }
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowEditModal(false)}>
+          <Button variant="secondary" onClick={ () => setShowEditModal(false) }>
             Cancel
           </Button>
-          <Button variant="primary" onClick={handleUpdateUser}>
+          <Button variant="primary" onClick={ handleUpdateUser }>
             Update
           </Button>
         </Modal.Footer>
